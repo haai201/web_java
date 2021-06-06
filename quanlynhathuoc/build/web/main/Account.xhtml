@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Account</title>
+        <h:outputStylesheet library="webjars" name="font-awesome/4.7.0/css/font-awesome.min-jsf.css" />
+        <style>
+            .ui-panelgrid .ui-panelgrid-cell{
+                margin-top: 5px;
+                color:black;
+            }
+            .thoat{
+                font-size: 18px;
+            }
+        </style>
+    </h:head>
+    
+    <h:body>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <p:dataTable value="#{AccountController.listaccount}" class="container-fluid" id="tableData"  widgetVar="tableData"
+                         paginator="true" var="item"  rows="10"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15" emptyMessage="Không Có Kết Quả Tìm Kiếm Nào."
+                         tableStyle="width:auto" rowIndexVar="index">
+                <f:facet name="header">
+                    <p:outputPanel>
+                        <h:outputText value="Tìm Kiếm: " />
+                        <p:inputText id="globalFilter" onkeyup="PF('tableData').filter()" style="width:150px" placeholder=" Từ Khóa"/>
+                    </p:outputPanel>
+                </f:facet>
+                <p:column headerText="Users" sortBy="#{item.users}" filterMatchMode="contains" filterBy="#{item.users}">
+                    <h:outputText value="#{item.users}"/>
+                </p:column>
+                <p:column headerText="Password" sortBy="#{item.password}" filterMatchMode="contains" filterBy="#{item.password}">
+                    <h:outputText value="#{item.password}"/>
+                </p:column>
+                <p:column headerText="Role" sortBy="#{item.role}" filterMatchMode="contains" filterBy="#{item.role}">
+                    <h:outputText value="#{item.role}"/>
+                </p:column>
+                <p:column headerText="Sửa/Xóa" style="width:100px;text-align: center">
+                    <p:commandButton icon="fa fa-pencil" update=":form:accountEdit" action="#{AccountController.editAccount(item)}" oncomplete="PF('editDialog').show();">
+                    </p:commandButton>
+                    <p:commandButton action="#{AccountController.deleteAccount(item)}" update="tableData @form" icon="fa fa-trash">
+                        <p:confirm header="Xác Nhận" message="Bạn Chắc Chắn Chứ?" icon="fa fa-exclamation-triangle" />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+            <p:dialog header="Sửa account" widgetVar="editDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="accountEdit" style="text-align:center;">
+                    <p:panelGrid columns="2" rendered="#{not empty AccountController.selectedAccount}" columnClasses="label,value">
+                        <h:outputText value="users " />
+                        <p:inputText value="#{AccountController.selectedAccount.users}" />
+                        <h:outputText value="password " />
+                        <p:inputText value="#{AccountController.selectedAccount.password}" />
+                        <h:outputText value="role " />
+                        <p:inputText value="#{AccountController.selectedAccount.role}" />
+                    </p:panelGrid>
+                    <p:commandButton style="margin-top: 5px;" value="Sửa" icon="fa fa-fw fa-pencil" update="tableData @form" action="#{AccountController.updateAccount()}">
+                        <p:confirm header="Xác Nhận" message="Bạn Chắc Chắn Chứ?" icon="fa fa-exclamation-triangle" />
+                    </p:commandButton>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+        <h:form>
+            <p:growl id="message" showDetail="true" />
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Có" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+                <p:commandButton value="Không" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" />
+            </p:confirmDialog>
+        </h:form>
+        <h1 class="page-header">&nbsp;Thêm
+                    <small>Account</small>
+        </h1>
+        <div class="container-fluid" style="padding-bottom:120px">
+            <h:form  >
+                <p:growl id="growl" showDetail="true" sticky="true" />
+                <div class="form-group">
+                    <h:outputText value="Users: " />
+                    <p:inputText class="form-control" value="#{AccountController.addAccount.users}"/>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Password: " />
+                    <p:inputText class="form-control" value="#{AccountController.addAccount.password}"/>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Role: " />
+                    <p:inputText class="form-control" value="#{AccountController.addAccount.role}"/>
+                </div>
+                <p:commandButton validateClient="true" class="btn btn-default" update=":form:tableData @form" value="Thêm" icon="fa fa-fw fa-plus" action="#{AccountController.saveAccount()}">
+                    <p:confirm header="Xác Nhận" message="Bạn Chắc Chắn Chứ?" icon="fa fa-exclamation-triangle" />
+                </p:commandButton>
+                <p:commandButton type="reset" icon="fa fa-fw fa-refresh" class="btn btn-default" value="Reset"/>
+            </h:form>
+            <p></p>
+            <button class="thoat">
+                <a href="http://localhost:8080/quanlynhathuoc/faces/index.jsp">Quay lại</a>
+            </button>
+        </div>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"></link>
+    </h:body>
+</html>
+

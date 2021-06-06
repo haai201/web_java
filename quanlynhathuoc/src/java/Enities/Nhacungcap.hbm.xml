@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-May-2020 18:06:52 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="Enities.Nhacungcap" table="nhacungcap" catalog="quanlybanhang" optimistic-lock="version">
+        <id name="MaNhaCc" type="string">
+            <column name="MaNhaCC" length="15" />
+            <generator class="assigned" />
+        </id>
+        <property name="tenNhaCc" type="string">
+            <column name="TenNhaCC" length="200" not-null="true" />
+        </property>
+        <set name="hoadonnhaps" table="hoadonnhap" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="MaNhaCC" length="15" not-null="true" />
+            </key>
+            <one-to-many class="Enities.Hoadonnhap" />
+        </set>
+        <set name="hanghoas" table="hanghoa" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="MaNhaCC" length="15" not-null="true" />
+            </key>
+            <one-to-many class="Enities.Hanghoa" />
+        </set>
+    </class>
+</hibernate-mapping>

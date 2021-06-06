@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-May-2020 18:06:52 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="Enities.Hoadonnhap" table="hoadonnhap" catalog="quanlybanhang" optimistic-lock="version">
+        <id name="ngayNhap" type="timestamp">
+            <column name="NgayNhap" length="19" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="donnhap" class="Enities.Donnhap" fetch="select">
+            <column name="MaHDN" length="15" not-null="true" />
+        </many-to-one>
+        <many-to-one name="hanghoa" class="Enities.Hanghoa" fetch="select">
+            <column name="MaHH" length="15" not-null="true" />
+        </many-to-one>
+        <many-to-one name="nhacungcap" class="Enities.Nhacungcap" fetch="select">
+            <column name="MaNhaCC" length="15" not-null="true" />
+        </many-to-one>
+        <many-to-one name="nhanvien" class="Enities.Nhanvien" fetch="select">
+            <column name="MaNV" length="15" not-null="true" />
+        </many-to-one>
+        <property name="tenHh" type="string">
+            <column name="TenHH" length="200" not-null="true" />
+        </property>
+        <property name="mota" type="string">
+            <column name="Mota" length="200" not-null="true" />
+        </property>
+        <property name="donGia" type="int">
+            <column name="DonGia" not-null="true" />
+        </property>
+        <property name="soLuong" type="int">
+            <column name="SoLuong" not-null="true" />
+        </property>
+        <property name="dvt" type="string">
+            <column name="DVT" length="50" not-null="true" />
+        </property>
+        <property name="tongTien" type="int">
+            <column name="TongTien" not-null="true" />
+        </property>
+        <property name="tenNv" type="string">
+            <column name="TenNV" length="50" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

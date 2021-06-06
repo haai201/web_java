@@ -1,0 +1,153 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Nhân viên</title>
+        <h:outputStylesheet library="webjars" name="font-awesome/4.7.0/css/font-awesome.min-jsf.css" />
+        <style>
+            .ui-panelgrid .ui-panelgrid-cell{
+                margin-top: 5px;
+                color:black;
+            }
+                        .thoat{
+                font-size: 18px;
+            }
+        </style>
+    </h:head>
+    
+    <h:body>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <p:dataTable value="#{NhanvienController.listnhanvien}" class="container-fluid" id="tableData"  widgetVar="tableData"
+                         paginator="true" var="item"  rows="10"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,25,50,100" emptyMessage="Không Có Kết Quả Tìm Kiếm Nào."
+                         tableStyle="width:auto" rowIndexVar="index">
+                <f:facet name="header">
+                    <p:outputPanel>
+                        <h:outputText value="Tìm Kiếm: " />
+                        <p:inputText id="globalFilter" onkeyup="PF('tableData').filter()" style="width:350px" placeholder=" Nhập từ khóa tìm kiếm..."/>
+                    </p:outputPanel>
+                </f:facet>
+                <p:column headerText="Mã nhân viên" sortBy="#{item.maNv}" style="text-align: center; width: 250px;" filterMatchMode="contains" filterBy="#{item.maNv}">
+                    <h:outputText value="#{item.maNv}" />
+                </p:column>
+                <p:column headerText="Tên nhân viên" sortBy="#{item.tenNv}" style="text-align: center; width: 250px;" filterMatchMode="contains" filterBy="#{item.tenNv}">
+                    <h:outputText value="#{item.tenNv}"/>
+                </p:column>
+                <p:column headerText="CMND/CCCD" sortBy="#{item.cmnd}" style="text-align: center; width: 250px;" filterMatchMode="contains" filterBy="#{item.cmnd}">
+                    <h:outputText value="#{item.cmnd}" />
+                </p:column>
+                <p:column headerText="Ngày sinh" sortBy="#{item.ngaySinh}" style="text-align: center; width: 250px;" filterMatchMode="contains" filterBy="#{NhanvienController.formatDate(item.ngaySinh)}">
+                    <h:outputText value="#{NhanvienController.formatDate(item.ngaySinh)}" />
+                </p:column>
+                <p:column headerText="Giới tính" sortBy="#{item.gioiTinh}" style="text-align: center; width: 250px;" filterMatchMode="contains" filterBy="#{item.gioiTinh}">
+                    <h:outputText value="#{item.gioiTinh}" />
+                </p:column>
+<p:column headerText="Địa chỉ" sortBy="#{item.diaChi}" filterMatchMode="contains" style="text-align: center; width: 250px;" filterBy="#{item.diaChi}">
+                    <h:outputText value="#{item.diaChi}" />
+                </p:column>
+                <p:column headerText="Số điện thoại" sortBy="#{item.soDt}" style="text-align: center; width: 250px;" filterMatchMode="contains" filterBy="#{item.soDt}">
+                    <h:outputText value="#{item.soDt}" />
+                </p:column>
+                <p:column headerText="Email/Gmail" sortBy="#{item.mail}" style="text-align: center; width: 250px;" filterMatchMode="contains" filterBy="#{item.mail}">
+                    <h:outputText value="#{item.mail}" />
+                </p:column>
+                <p:column headerText="Sửa/Xóa" style="width:300px;text-align: center">
+                    <p:commandButton icon="fa fa-pencil" update=":form:nhanvienEdit" style="background-color: green" action="#{NhanvienController.editNhanvien(item)}" oncomplete="PF('editDialog').show();">
+                    </p:commandButton>
+                    <p:commandButton action="#{NhanvienController.deleteNhanvien(item)}" style="background-color: red" update="tableData @form" icon="fa fa-trash">
+                        <p:confirm header="Xác Nhận" message="Bạn Chắc Chắn Chứ?" icon="fa fa-exclamation-triangle" />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+            <p:dialog header="Sửa nhân viên" widgetVar="editDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="nhanvienEdit" style="text-align:center;">
+                    <p:panelGrid columns="2" rendered="#{not empty NhanvienController.selectedNhanvien}" columnClasses="label,value">
+                        <h:outputText value="Tên nhân viên " />
+                        <p:inputText value="#{NhanvienController.selectedNhanvien.tenNv}" />
+                        <h:outputText value="CMND/CCCD" />
+                        <p:inputText value="#{NhanvienController.selectedNhanvien.cmnd}" />
+                        <h:outputText value="Ngày sinh" />
+                        <p:inputText value="#{NhanvienController.selectedNhanvien.ngaySinh}"> 
+                            <f:convertDateTime pattern = "dd/MM/yyyy" timeZone="GMT+7"/>
+                        </p:inputText>
+                        <h:outputText value="Địa chỉ" />
+                        <p:inputText value="#{NhanvienController.selectedNhanvien.gioiTinh}" />
+                        <h:outputText value="Email/Gmail" />
+                        <p:inputText value="#{NhanvienController.selectedNhanvien.diaChi}" />
+                        <h:outputText value="Số điện thoại" />
+                        <p:inputText value="#{NhanvienController.selectedNhanvien.soDt}" />
+                        <h:outputText value="Email/Gmail" />
+                        <p:inputText type="email" value="#{NhanvienController.selectedNhanvien.mail}" />
+                    </p:panelGrid>
+<p:commandButton style="margin-top: 5px;" value="Sửa" icon="fa fa-fw fa-pencil" update="tableData @form" action="#{NhanvienController.updateNhanvien()}">
+                        <p:confirm header="Xác Nhận" message="Bạn Chắc Chắn Chứ?" icon="fa fa-exclamation-triangle" />
+                    </p:commandButton>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+        <h:form>
+            <p:growl id="message" showDetail="true" />
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Có" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+                <p:commandButton value="Không" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" />
+            </p:confirmDialog>
+        </h:form>
+        <h1 class="page-header">&nbsp;Thêm
+                    <small>Nhân viên</small>
+        </h1>
+        <div class="container-fluid" style="padding-bottom:120px">
+            <h:form  >
+                <p:growl id="growl" showDetail="true" sticky="true" />
+                <div class="form-group">
+                    <h:outputText value="Mã nhân viên: " />
+                    <p:inputText class="form-control" value="#{NhanvienController.addNhanvien.maNv}"/>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Tên nhân viên: " />
+                    <p:inputText class="form-control" value="#{NhanvienController.addNhanvien.tenNv}"/>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="CMND/CCCD: " />
+                    <p:inputText class="form-control" value="#{NhanvienController.addNhanvien.cmnd}"/>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Ngày sinh: " />
+                    <p:inputText class="form-control" value="#{NhanvienController.addNhanvien.ngaySinh}">
+                        <f:convertDateTime pattern = "dd/MM/yyyy" timeZone="GMT+7"/>
+                    </p:inputText>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Giới tính: " />
+                    <p:inputText class="form-control" value="#{NhanvienController.addNhanvien.gioiTinh}"/>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Địa chỉ: " />
+                    <p:inputText class="form-control" value="#{NhanvienController.addNhanvien.diaChi}"/>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Số điện thoại: " />
+                    <p:inputText class="form-control" value="#{NhanvienController.addNhanvien.soDt}"/>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Email/Gmail: " />
+<p:inputText class="form-control" type="email" value="#{NhanvienController.addNhanvien.mail}"/>
+                </div>
+                <p:commandButton validateClient="true" class="btn btn-default" style="background-color: #48caeb" update=":form:tableData @form" value="Thêm" icon="fa fa-fw fa-plus" action="#{NhanvienController.saveNhanvien()}">
+                    <p:confirm header="Xác Nhận" message="Bạn Chắc Chắn Chứ?" icon="fa fa-exclamation-triangle" />
+                </p:commandButton>
+                <p:commandButton type="reset" icon="fa fa-fw fa-refresh" class="btn btn-default" value="Reset"/>
+            </h:form>
+            <p></p>
+            <button class="thoat">
+                <a href="http://localhost:8080/quanlynhathuoc/faces/index.jsp">Quay lại</a>
+            </button>
+        </div>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"></link>
+    </h:body>
+</html>

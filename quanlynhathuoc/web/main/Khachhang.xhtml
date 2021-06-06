@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Khách hàng</title>
+        <h:outputStylesheet library="webjars" name="font-awesome/4.7.0/css/font-awesome.min-jsf.css" />
+        <style>
+            .ui-panelgrid .ui-panelgrid-cell{
+                margin-top: 5px;
+                color:black;
+            }
+                        .thoat{
+                font-size: 18px;
+            }
+        </style>
+    </h:head>
+    
+    <h:body>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <p:dataTable value="#{KhachhangController.listkhachhang}" class="container-fluid" id="tableData"  widgetVar="tableData"
+                         paginator="true" var="item"  rows="10"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15" emptyMessage="Không Có Kết Quả Tìm Kiếm Nào."
+                         tableStyle="width:auto" rowIndexVar="index">
+                <f:facet name="header">
+                    <p:outputPanel>
+                        <h:outputText value="Tìm Kiếm: " />
+                        <p:inputText id="globalFilter" onkeyup="PF('tableData').filter()" style="width:350px" placeholder="Nhập từ khóa tìm kiếm..."/>
+                    </p:outputPanel>
+                </f:facet>
+                <p:column headerText="Mã khách hàng" sortBy="#{item.maKh}" style="text-align: center; width: 250px;" filterMatchMode="contains" filterBy="#{item.maKh}">
+                    <h:outputText value="#{item.maKh}" />
+                </p:column>
+                <p:column headerText="Tên khách hàng" sortBy="#{item.tenKh}" style="text-align: center; width: 250px;" filterMatchMode="contains" filterBy="#{item.tenKh}">
+                    <h:outputText value="#{item.tenKh}"/>
+                </p:column>
+                <p:column headerText="CMND/CCCD" sortBy="#{item.cmnd}" style="text-align: center; width: 250px;" filterMatchMode="contains" filterBy="#{item.cmnd}">
+                    <h:outputText value="#{item.cmnd}" />
+                </p:column>
+                <p:column headerText="Số điện thoại" sortBy="#{item.soDt}" style="text-align: center; width: 250px;" filterMatchMode="contains" filterBy="#{item.soDt}">
+                    <h:outputText value="#{item.soDt}" />
+                </p:column>
+                <p:column headerText="Địa chỉ" sortBy="#{item.diaChi}" style="text-align: center; width: 250px;" filterMatchMode="contains" filterBy="#{item.diaChi}">
+                    <h:outputText value="#{item.diaChi}" />
+                </p:column>
+                <p:column headerText="Tích điểm" sortBy="#{item.tichDiem}" style="text-align: center; width: 250px;" filterMatchMode="contains" filterBy="#{item.tichDiem}">
+                    <h:outputText value="#{item.tichDiem}" />
+                </p:column>
+                <p:column headerText="Sửa/Xóa" style="width:100px;text-align: center">
+                    <p:commandButton icon="fa fa-pencil" update=":form:khachhangEdit" style="background-color: green" action="#{KhachhangController.editKhachhang(item)}" oncomplete="PF('editDialog').show();">
+                    </p:commandButton>
+                    <p:commandButton action="#{KhachhangController.deleteKhachhang(item)}" style="background-color: red" update="tableData @form" icon="fa fa-trash">
+                        <p:confirm header="Xác Nhận" message="Bạn Chắc Chắn Chứ?" icon="fa fa-exclamation-triangle" />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+            <p:dialog header="Sửa khách hàng" widgetVar="editDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="khachhangEdit" style="text-align:center;">
+                    <p:panelGrid columns="2" rendered="#{not empty KhachhangController.selectedKhachhang}" columnClasses="label,value">
+                        <h:outputText value="Tên khách hàng " />
+                        <p:inputText value="#{KhachhangController.selectedKhachhang.tenKh}" />
+                        <h:outputText value="CMND/CCCD" />
+                        <p:inputText value="#{KhachhangController.selectedKhachhang.cmnd}" />
+                        <h:outputText value="Số điện thoại" />
+                        <p:inputText value="#{KhachhangController.selectedKhachhang.soDt}" />
+                        <h:outputText value="Địa chỉ" />
+                        <p:inputText value="#{KhachhangController.selectedKhachhang.diaChi}" />
+                        <h:outputText value="Tích điểm" />
+                        <p:inputText value="#{KhachhangController.selectedKhachhang.tichDiem}" />
+                    </p:panelGrid>
+                    <p:commandButton style="margin-top: 5px;" value="Sửa" icon="fa fa-fw fa-pencil" update="tableData @form" action="#{KhachhangController.updateKhachhang()}">
+                        <p:confirm header="Xác Nhận" message="Bạn Chắc Chắn Chứ?" icon="fa fa-exclamation-triangle" />
+                    </p:commandButton>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+        <h:form>
+            <p:growl id="message" showDetail="true" />
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Có" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+                <p:commandButton value="Không" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" />
+            </p:confirmDialog>
+        </h:form>
+        <h1 class="page-header">&nbsp;Thêm
+                    <small>Khách hàng</small>
+        </h1>
+        <div class="container-fluid" style="padding-bottom:120px">
+            <h:form  >
+                <p:growl id="growl" showDetail="true" sticky="true" />
+                <div class="form-group">
+                    <h:outputText value="Mã khách hàng: " />
+                    <p:inputText class="form-control" value="#{KhachhangController.addKhachhang.maKh}"/>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Tên khách hàng: " />
+                    <p:inputText class="form-control" value="#{KhachhangController.addKhachhang.tenKh}"/>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="CMND/CCCD: " />
+                    <p:inputText class="form-control" value="#{KhachhangController.addKhachhang.cmnd}"/>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Số điện thoại: " />
+                    <p:inputText class="form-control" value="#{KhachhangController.addKhachhang.soDt}"/>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Địa chỉ: " />
+                    <p:inputText class="form-control" value="#{KhachhangController.addKhachhang.diaChi}"/>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Tích điểm: " />
+                    <p:inputText class="form-control" value="#{KhachhangController.addKhachhang.tichDiem}"/>
+                </div>
+                <p:commandButton validateClient="true" class="btn btn-default" update=":form:tableData @form" value="Thêm" style="background-color: #48caeb" icon="fa fa-fw fa-plus" action="#{KhachhangController.saveKhachhang()}">
+                    <p:confirm header="Xác Nhận" message="Bạn Chắc Chắn Chứ?" icon="fa fa-exclamation-triangle" />
+                </p:commandButton>
+                <p:commandButton type="reset" icon="fa fa-fw fa-refresh" class="btn btn-default" value="Reset"/>
+            </h:form>
+            <p></p>
+            <button class="thoat">
+                <a href="http://localhost:8080/quanlynhathuoc/faces/index.jsp">Quay lại</a>
+            </button>
+        </div>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"></link>
+
+    </h:body>
+</html>
+

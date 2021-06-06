@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-May-2020 18:06:52 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="Enities.Hoadonban" table="hoadonban" catalog="quanlybanhang" optimistic-lock="version">
+        <id name="ngayBan" type="timestamp">
+            <column name="NgayBan" length="19" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="donban" class="Enities.Donban" fetch="select">
+            <column name="MaHDB" length="15" not-null="true" />
+        </many-to-one>
+        <many-to-one name="khachhang" class="Enities.Khachhang" fetch="select">
+            <column name="MaKH" length="15" not-null="true" />
+        </many-to-one>
+        <many-to-one name="nhanvien" class="Enities.Nhanvien" fetch="select">
+            <column name="MaNV" length="15" not-null="true" />
+        </many-to-one>
+        <property name="tenHh" type="string">
+            <column name="TenHH" length="200" not-null="true" />
+        </property>
+        <property name="soLuong" type="int">
+            <column name="SoLuong" not-null="true" />
+        </property>
+        <property name="donGia" type="int">
+            <column name="DonGia" not-null="true" />
+        </property>
+        <property name="tongTien" type="int">
+            <column name="TongTien" not-null="true" />
+        </property>
+        <property name="tichDiem" type="java.lang.Integer">
+            <column name="TichDiem" />
+        </property>
+        <property name="tenNv" type="string">
+            <column name="TenNV" length="50" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

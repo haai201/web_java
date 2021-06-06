@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 14-May-2020 18:06:52 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="Enities.Nhanvien" table="nhanvien" catalog="quanlybanhang" optimistic-lock="version">
+        <id name="maNv" type="string">
+            <column name="MaNV" length="15" />
+            <generator class="assigned" />
+        </id>
+        <property name="tenNv" type="string">
+            <column name="TenNV" length="50" not-null="true" />
+        </property>
+        <property name="cmnd" type="string">
+            <column name="CMND" length="15" not-null="true" />
+        </property>
+        <property name="ngaySinh" type="date">
+            <column name="NgaySinh" length="10" not-null="true" />
+        </property>
+        <property name="gioiTinh" type="string">
+            <column name="GioiTinh" length="10" not-null="true" />
+        </property>
+        <property name="diaChi" type="string">
+            <column name="DiaChi" length="50" not-null="true" />
+        </property>
+        <property name="soDt" type="int">
+            <column name="SoDT" not-null="true" />
+        </property>
+        <property name="mail" type="string">
+            <column name="Mail" length="50" not-null="true" />
+        </property>
+        <set name="hoadonnhaps" table="hoadonnhap" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="MaNV" length="15" not-null="true" />
+            </key>
+            <one-to-many class="Enities.Hoadonnhap" />
+        </set>
+        <set name="hoadonbans" table="hoadonban" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="MaNV" length="15" not-null="true" />
+            </key>
+            <one-to-many class="Enities.Hoadonban" />
+        </set>
+        <set name="userses" table="users" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="MaNV" length="15" not-null="true" />
+            </key>
+            <one-to-many class="Enities.Users" />
+        </set>
+    </class>
+</hibernate-mapping>

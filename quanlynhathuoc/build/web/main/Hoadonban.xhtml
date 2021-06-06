@@ -1,0 +1,190 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>ND Pharmacity</title>
+        <h:outputStylesheet library="webjars" name="font-awesome/4.7.0/css/font-awesome.min-jsf.css" />
+        <style>
+            .ui-panelgrid .ui-panelgrid-cell{
+                margin-top: 5px;
+                color:black;
+            }
+            .thoat{
+                font-size: 18px;
+            }
+        </style>
+    </h:head>
+    
+    <h:body>
+        <h:form id="form">
+            <p:growl id="growl" showDetail="true" sticky="true" />
+            <p:dataTable value="#{HoadonbanController.listhoadonban}" class="container-fluid" id="tableData"  widgetVar="tableData"
+                         paginator="true" var="item"  rows="10"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,25,50,100" emptyMessage="Không Có Kết Quả Tìm Kiếm Nào."
+                         tableStyle="width:auto" rowIndexVar="index">
+                <f:facet name="header">
+                    <p:outputPanel>
+                        <h:outputText value="Tìm Kiếm: " />
+                        <p:inputText id="globalFilter" onkeyup="PF('tableData').filter()" style="width:150px" placeholder=" Từ Khóa"/>
+                    </p:outputPanel>
+                </f:facet>
+                <p:column headerText="Ngày bán" sortBy="#{item.ngayBan}" style="text-align: center; width: 150px;" filterMatchMode="contains" filterBy="#{item.ngayBan}">
+                    <h:outputText value="#{item.ngayBan}" />
+                </p:column>
+                <p:column headerText="Mã hóa đơn bán" sortBy="#{item.donban.maHdb}" filterMatchMode="contains" filterBy="#{item.donban.maHdb}">
+                    <h:outputText value="#{item.donban.maHdb}"/>
+                </p:column>
+                <p:column headerText="Mã khách hàng" sortBy="#{item.khachhang.maKh}" filterMatchMode="contains" filterBy="#{item.khachhang.maKh}">
+                    <h:outputText value="#{item.khachhang.maKh}" />
+                </p:column>
+                <p:column headerText="Tên hàng hóa" sortBy="#{item.tenHh}" filterMatchMode="contains" filterBy="#{item.tenHh}">
+                    <h:outputText value="#{item.tenHh}" />
+                </p:column>
+                <p:column headerText="Số lượng" sortBy="#{item.soLuong}" filterMatchMode="contains" filterBy="#{item.soLuong}">
+                    <h:outputText value="#{item.soLuong}" />
+                </p:column>
+                <p:column headerText="Đơn giá" sortBy="#{item.donGia}" filterMatchMode="contains" filterBy="#{item.donGia}">
+                    <h:outputText value="#{item.donGia}" />
+                </p:column>
+                <p:column headerText="Tổng tiền" sortBy="#{item.tongTien}" filterMatchMode="contains" filterBy="#{item.tongTien}">
+                    <h:outputText value="#{item.tongTien}" />
+                </p:column>
+                <p:column headerText="Tích điểm" sortBy="#{item.tichDiem}" filterMatchMode="contains" filterBy="#{item.tichDiem}">
+                    <h:outputText value="#{item.tichDiem}" />
+                </p:column>
+                <p:column headerText="Mã nhân viên" sortBy="#{item.nhanvien.maNv}" filterMatchMode="contains" filterBy="#{item.nhanvien.maNv}">
+                    <h:outputText value="#{item.nhanvien.maNv}" />
+                </p:column>
+                <p:column headerText="Tên nhân viên" sortBy="#{item.tenNv}" filterMatchMode="contains" filterBy="#{item.tenNv}">
+                    <h:outputText value="#{item.tenNv}" />
+                </p:column>
+                <p:column headerText="Sửa/Xóa" style="width:100px;text-align: center">
+                    <p:commandButton icon="fa fa-pencil" update=":form:hoadonbanEdit" action="#{HoadonbanController.editHoadonban(item)}" oncomplete="PF('editDialog').show();">
+                    </p:commandButton>
+                    <p:commandButton action="#{HoadonbanController.deleteHoadonban(item)}" update="tableData @form" icon="fa fa-trash">
+                        <p:confirm header="Xác Nhận" message="Bạn Chắc Chắn Chứ?" icon="fa fa-exclamation-triangle" />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+            <p:dialog header="Sửa hóa đơn bán" widgetVar="editDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="hoadonbanEdit" style="text-align:center;">
+                    <p:panelGrid columns="2" rendered="#{not empty HoadonbanController.selectedHoadonban}" columnClasses="label,value">
+                        <h:outputText value="Ngày Bán" />
+                            <p:inputText type="datetime-local" value="#{HoadonbanController.selectedHoadonban.ngayBan}" />
+                        <h:outputText value="Mã hóa đơn bán" />
+                            <p:selectOneMenu id="selectDonban" widgetVar="slecEditDonban" value="#{HoadonbanController.optionIdDonban}" effect="fold" editable="true">
+                                <f:selectItem itemLabel="Vui Lòng Chọn " itemValue="" />
+                                <f:selectItems value="#{HoadonbanController.optionsmaDonban}" />
+                            </p:selectOneMenu>
+                        <h:outputText value="Mã khách hàng" />
+                            <p:selectOneMenu id="selectKhachhang" widgetVar="slecEditKhachhang" value="#{HoadonbanController.optionIdKhachhang}" effect="fold" editable="true">
+                                <f:selectItem itemLabel="Vui Lòng Chọn " itemValue="" />
+                                <f:selectItems value="#{HoadonbanController.optionstenKhachhang}" />
+                            </p:selectOneMenu>
+                        <h:outputText value="Tên hàng hóa" />
+                            <p:inputText value="#{HoadonbanController.selectedHoadonban.tenHh}" />
+                        <h:outputText value="Số lượng" />
+                            <p:inputText value="#{HoadonbanController.selectedHoadonban.soLuong}" />
+                        <h:outputText value="Đơn giá" />
+                            <p:inputText value="#{HoadonbanController.selectedHoadonban.donGia}" />
+                        <h:outputText value="Tổng tiền" />
+                            <p:inputText value="#{HoadonbanController.selectedHoadonban.tongTien}" />
+                        <h:outputText value="Tích điểm" />
+                            <p:inputText value="#{HoadonbanController.selectedHoadonban.tichDiem}" />
+                        <h:outputText value="Mã nhân viên" />
+                            <p:selectOneMenu id="selectNhanvien" widgetVar="slecEditNhanvien" value="#{HoadonbanController.optionIdNhanvien}" effect="fold" editable="true">
+                                <f:selectItem itemLabel="Vui Lòng Chọn " itemValue="" />
+                                <f:selectItems value="#{HoadonbanController.optionstenNhanvien}" />
+                            </p:selectOneMenu>
+                        <h:outputText value="Tên nhân viên" />
+                            <p:inputText value="#{HoadonbanController.selectedHoadonban.nhanvien.tenNv}" />
+                        
+                    </p:panelGrid>
+                    <p:commandButton style="margin-top: 5px;" value="Sửa" icon="fa fa-fw fa-pencil" update="tableData @form" action="#{HoadonbanController.updateHoadonban()}">
+                        <p:confirm header="Xác Nhận" message="Bạn Chắc Chắn Chứ?" icon="fa fa-exclamation-triangle" />
+                    </p:commandButton>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+        <h:form>
+            <p:growl id="message" showDetail="true" />
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Có" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+                <p:commandButton value="Không" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" />
+            </p:confirmDialog>
+        </h:form>
+        <h1 class="page-header">&nbsp;Thêm
+                    <small>Hóa đơn bán</small>
+        </h1>
+        <div class="container-fluid" style="padding-bottom:120px">
+            <h:form  >
+                <p:growl id="growl" showDetail="true" sticky="true" />
+                <div class="form-group">
+                    <h:outputText value="Ngày bán: " />
+                    <input class="form-control" type="datetime-local" value="#{HoadonbanController.addHoadonban.ngayBan}"/>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Mã hóa đơn bán: " />
+                    <p:selectOneMenu id="selectDonban" widgetVar="slecAddDonban" value="#{HoadonbanController.optionIdDonban}" effect="fold" editable="true">
+                            <f:selectItem itemLabel="Vui Lòng Chọn " itemValue="" />
+                            <f:selectItems value="#{HoadonbanController.optionsmaDonban}" />
+                    </p:selectOneMenu>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Tên khách hàng: " />
+                    <p:selectOneMenu id="selectKhachhang" widgetVar="slecAddKhachhang" value="#{HoadonbanController.optionIdKhachhang}" effect="fold" editable="true">
+                            <f:selectItem itemLabel="Vui Lòng Chọn " itemValue="" />
+                            <f:selectItems value="#{HoadonbanController.optionstenKhachhang}" />
+                    </p:selectOneMenu>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Tên hàng hóa: " />
+                    <p:inputText class="form-control" value="#{HoadonbanController.addHoadonban.tenHh}"/>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Số lượng: " />
+                    <p:inputText class="form-control" value="#{HoadonbanController.addHoadonban.soLuong}" />
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Đơn giá: " />
+                    <p:inputText class="form-control" value="#{HoadonbanController.addHoadonban.donGia}"/>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Tổng tiền: " />
+                    <p:inputText class="form-control" value="#{HoadonbanController.addHoadonban.tongTien}"/>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Tích điểm: " />
+                    <p:inputText class="form-control" value="#{HoadonbanController.addHoadonban.tichDiem}"/>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Mã nhân viên: " />
+                    <p:selectOneMenu id="selectNhanvien" widgetVar="slecAddNhanvien" value="#{HoadonbanController.optionIdNhanvien}" effect="fold" editable="true">
+                            <f:selectItem itemLabel="Vui Lòng Chọn " itemValue="" />
+                            <f:selectItems value="#{HoadonbanController.optionsmaNhanvien}" />
+                    </p:selectOneMenu>
+                </div>
+                <div class="form-group">
+                    <h:outputText value="Tên nhân viên: " />
+                    <p:inputText class="form-control" value="#{HoadonbanController.addHoadonban.tenNv}"/>
+                </div>
+                <p:commandButton validateClient="true" class="btn btn-default" update=":form:tableData @form" value="Thêm" icon="fa fa-fw fa-plus" action="#{HoadonbanController.saveHoadonban()}">
+                    <p:confirm header="Xác Nhận" message="Bạn Chắc Chắn Chứ?" icon="fa fa-exclamation-triangle" />
+                </p:commandButton>
+                <p:commandButton type="reset" icon="fa fa-fw fa-refresh" class="btn btn-default" value="Reset"/>
+              
+            </h:form>
+             <button class="thoat">
+                <a href="http://localhost:8080/quanlynhathuoc/faces/index.jsp">Quay lại</a>
+            </button>
+        </div>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"></link>
+
+    </h:body>
+</html>
+
